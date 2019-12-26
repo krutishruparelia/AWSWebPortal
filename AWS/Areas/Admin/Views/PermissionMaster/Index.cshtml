@@ -1,0 +1,53 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@*<div class="card">
+        <div class="card-header">
+            Permission Master
+        </div>
+        <div class="card-body">
+            <form id="form" method="post" action="" enctype="multipart/form-data">
+                <div id="permissionmastergrid"></div>
+                <div id="button"></div>
+                </form>
+        </div>
+    </div>
+    <script>
+        var stationalldata = @Html.Raw(Json.Encode(ViewBag.stationalldata));
+    </script>
+*@
+<div class="card">
+    <div class="card-header">
+        Permission Master
+    </div>
+    <div class="card-body" id="form-container">
+        <form id="form" method="post" action="" enctype="multipart/form-data">
+            <div class="form-group row">
+                <label for="input-23" class="col-sm-1 col-form-label">Select User</label>
+                <div class="col-sm-3">
+                    <div id="lookup"></div>
+                </div>
+            </div>
+            <div class="dx-viewport demo-container">
+                <div id="grid">
+                    <div id="select-prefix"></div>
+                    <div id="grid-container"></div>
+                    <div class="loadpanel"></div>
+                    <div class="selected-data">
+                        <span id="selected-items-container" style="display:none">Nobody has been selected</span>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align:center">
+                <div id="button" class="show-panel"></div>
+            </div>
+        </form>
+        </div>
+    </div>
+        <script>
+            var stationalldata = @Html.Raw(Json.Encode(ViewBag.stationalldata));
+            var alluser = @Html.Raw(Json.Encode(ViewBag.alluser));
+        </script>
+        <script src="~/Scripts/PermissionMaster.js"></script>

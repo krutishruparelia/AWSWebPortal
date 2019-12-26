@@ -28,21 +28,21 @@ namespace AWS.Controllers
         [HttpPost]
         public ActionResult Index(tbl_User userClass)
         {
-            var username = userClass.Username;
+            var username = userClass.EmailID;
             var password = userClass.Password;
-            var userDetails = db.tbl_User.Where(x => x.Username == username && x.Password == password).FirstOrDefault();
+            var userDetails = db.tbl_User.Where(x => x.EmailID == username && x.Password == password).FirstOrDefault();
             if (userDetails != null)
             {
                 bool? checkAdmin = userDetails.IsAdmin;
                 if (checkAdmin == true)
                 {
-                    var getUserid = db.tbl_User.Where(x => x.Username == username).FirstOrDefault();
+                    var getUserid = db.tbl_User.Where(x => x.EmailID == username).FirstOrDefault();
                     Session.Add("userid", getUserid.ID);
                     return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
                 }
                 else
                 {
-                    var getUserid = db.tbl_User.Where(x => x.Username == username).FirstOrDefault();
+                    var getUserid = db.tbl_User.Where(x => x.EmailID == username).FirstOrDefault();
                     Session.Add("name", getUserid.FirstName + " " + getUserid.LastName);
                     
                     Session.Add("U_userid", getUserid.ID);

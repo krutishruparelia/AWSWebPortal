@@ -1712,6 +1712,7 @@
     <Content Include="LoginCSS\vendor\bootstrap\css\bootstrap-reboot.min.css.map" />
     <Content Include="LoginCSS\vendor\bootstrap\css\bootstrap.css.map" />
     <Content Include="LoginCSS\vendor\bootstrap\css\bootstrap.min.css.map" />
+    <Content Include="Areas\Admin\Views\PermissionMaster\Index.cshtml" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Scripts\jquery-3.1.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.1.0.js" />
@@ -1736,6 +1737,7 @@
     <Content Include="Scripts\MissingData.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\Parameter.js" />
+    <Content Include="Scripts\PermissionMaster.js" />
     <Content Include="Scripts\Profile.js" />
     <Content Include="Scripts\ProfileData.js" />
     <Content Include="Scripts\Role.js" />
@@ -1845,7 +1847,7 @@
     <Compile Include="Areas\Admin\Controllers\ImportStationController.cs" />
     <Compile Include="Areas\Admin\Controllers\MissingDataPermissionController.cs" />
     <Compile Include="Areas\Admin\Controllers\ParameterController.cs" />
-    <Compile Include="Areas\Admin\Controllers\PermissionController.cs" />
+    <Compile Include="Areas\Admin\Controllers\PermissionMasterController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProfileController.cs" />
     <Compile Include="Areas\Admin\Controllers\RoleController.cs" />
     <Compile Include="Areas\Admin\Controllers\SensorController.cs" />

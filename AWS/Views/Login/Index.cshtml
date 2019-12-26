@@ -59,8 +59,8 @@
                     </span>
 
 
-                    <div class="wrap-input100 validate-input" data-validate="Valid username is required: abc">
-                        @Html.TextBoxFor(m => m.Username, new { @class = "input100", @id = "login"})
+                    <div class="wrap-input100 validate-input" data-validate="Valid email is required: ex@abc.xyz">
+                        @Html.TextBoxFor(m => m.EmailID, new { @class = "input100", @id = "login", @name = "email" })
                         @*<input class="input100" type="text">*@
                         <span class="focus-input100"></span>
                         <span class="label-input100" id="username">Username</span>
