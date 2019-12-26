@@ -1,0 +1,126 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+}
+<div class="card">
+    <div class="card-header">
+        Report View
+    </div>
+    <div class="card-body" id="form-container">
+        <form>
+            <div class="form-group row">
+                <label for="input-22" class="col-sm-2 col-form-label">From Date</label>
+                <div>
+                    <div id="FromDate" class="form-control"></div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="input-21" class="col-sm-2 col-form-label">To Date</label>
+                <div>
+                    <div id="Todate" class="form-control"></div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="input-23" class="col-sm-2 col-form-label">Select Station</label>
+                <div class="col-sm-3">
+                    <div id="lookup"></div>
+                </div>
+            </div>
+            <div class="form-group row" style="margin-left:37%">
+                <div class="show-panel"></div>
+                <div id="default-contained"></div>
+            </div>
+            <div class="loadpanel"></div>
+            <div id="gridshow"></div>
+        </form>
+    </div>
+</div>
+
+<script>
+    var Rdata = "";
+    var showLoadPanel = function () {
+        loadPanel.show();
+    };
+
+    $(".show-panel").dxButton({
+        stylingMode: "contained",
+        text: "Generate Report",
+        type: "default",
+        onClick: showLoadPanel
+    });
+
+    var loadPanel = $(".loadpanel").dxLoadPanel({
+        shadingColor: "rgba(0,0,0,0.4)",
+        position: { of: "#form-container" },
+        visible: false,
+        showIndicator: true,
+        showPane: true,
+        shading: true,
+        closeOnOutsideClick: false,
+        onShown: function () {
+            setTimeout(function () {
+                loadPanel.hide();
+            }, 3000);
+        },
+        onHidden: function () {
+            var toDate = $("#Todate").dxDateBox('option', 'value')
+            var fromDate = $("#FromDate").dxDateBox('option', 'value')
+            var stationName = $("#lookup").dxLookup('option', 'value')
+
+            $.ajax({
+                url: "/User/Reports/GetData",
+                dataType: "json",
+                data: { "toDate": toDate, "fromDate": fromDate, "stationName": stationName },
+                success: function (result) {
+                    var data = result;
+                    var parsejson = JSON.parse(data);
+                    Rdata = data;
+                    datagridshow(Rdata);
+                }
+            });
+        }
+    }).dxLoadPanel("instance");
+
+    var StationList = @Html.Raw(Json.Encode(ViewBag.stationSql));
+    $("#Todate").dxDateBox({
+        name:"Todate",
+        type: "date",
+        displayFormat: "dd/MM/yyy",
+    });
+    $("#FromDate").dxDateBox({
+        type: "date",
+        displayFormat: "dd/MM/yyy",
+    });
+    $("#lookup").dxLookup({
+        items: StationList,
+        showPopupTitle: false,
+        validationRules: [{ type: "required" }],
+    });
+
+    function datagridshow(Rdata) {
+        var jsonformated = JSON.parse(Rdata);
+        var ToDate = new Date($("#Todate").dxDateBox('option', 'value'));
+        var tdate = ToDate.getDate() + "-" + ToDate.getMonth() + "-" + ToDate.getFullYear();
+        var frmDate = new Date($("#FromDate").dxDateBox('option', 'value'));
+        var fdate = frmDate.getDate() + "-" + frmDate.getMonth() + "-" + frmDate.getFullYear();
+        fdate = fdate.slice(1, 11)
+        $("#gridshow").dxDataGrid({
+            dataSource: JSON.parse(Rdata),
+            showBorders: true,
+            selection: {
+                mode: "multiple"
+            },
+            "export": {
+                enabled: true,
+                fileName: $("#lookup").dxLookup('option', 'value')+"-"+jsonformated[0].StationID + "-" + fdate + "to" + tdate,
+                allowExportSelectedData: true
+            },
+            groupPanel: {
+                visible: true
+            },
+
+        });
+    }
+</script>

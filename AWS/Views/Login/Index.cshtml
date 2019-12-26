@@ -1,0 +1,162 @@
+﻿@model AWS.Models.tbl_User
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AWS Login</title>
+    <!--===============================================================================================-->
+
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/LoginCSS/vendor/bootstrap/css/bootstrap.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/LoginCSS/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/LoginCSS/fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/LoginCSS/vendor/animate/animate.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/LoginCSS/vendor/css-hamburgers/hamburgers.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/LoginCSS/vendor/animsition/css/animsition.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/LoginCSS/vendor/select2/select2.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/LoginCSS/vendor/daterangepicker/daterangepicker.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/LoginCSS/css/util.css">
+    <link rel="stylesheet" type="text/css" href="~/LoginCSS/css/main.css">
+    <script src="~/LoginCSS/vendor/jquery/jquery-3.2.1.min.js"></script>
+    @Styles.Render("~/Content/DevExtremeBundle")
+
+    @Scripts.Render("~/Scripts/DevExtremeBundle")
+
+    <link href="~/Content/Login.css" rel="stylesheet" />
+</head>
+<body>
+    @if(Convert.ToString(TempData["Invalid"])== "Invalid")
+    {
+    <script>
+        $(document).ready(function () {
+            DevExpress.ui.dialog.alert("Wrong Username or Password", "Opsss!!")
+        });
+    </script>
+    }
+    <div class="limiter">
+        <div class="container-login100">
+            <div class="wrap-login100">
+                <form class="login100-form validate-form" method="post" action="/Login/Index">
+                    <div class="fadeIn first" style="text-align:center;">
+                        <img src="~/Images/azista.png" id="icon" alt="User Icon" />
+                    </div>
+                    <br />
+                    <span class="login100-form-title p-b-43">
+                        Weather Web Portal
+                    </span>
+
+
+                    <div class="wrap-input100 validate-input" data-validate="Valid username is required: abc">
+                        @Html.TextBoxFor(m => m.Username, new { @class = "input100", @id = "login"})
+                        @*<input class="input100" type="text">*@
+                        <span class="focus-input100"></span>
+                        <span class="label-input100" id="username">Username</span>
+                    </div>
+
+
+                    <div class="wrap-input100 validate-input" data-validate="Password is required">
+                        @Html.PasswordFor(m => m.Password, new { @class = "input100", @id = "login" })
+                        <span class="focus-input100"></span>
+                        <span class="label-input100">Password</span>
+                    </div>
+
+                    <div class="flex-sb-m w-full p-t-3 p-b-32">
+                        <div class="contact100-form-checkbox">
+                            <input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me">
+                            <label class="label-checkbox100" for="ckb1">
+                                Remember me
+                            </label>
+                        </div>
+
+                        <div>
+                            <a href="#" class="txt1">
+                                Forgot Password?
+                            </a>
+                        </div>
+                    </div>
+
+
+                    <div class="container-login100-form-btn">
+                        <button class="login100-form-btn">
+                            Login
+                        </button>
+                    </div>
+
+                 
+
+                   
+                </form>
+
+                <div class="login100-more">
+                    <div id="map"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*<div class="row">
+            <div class="col-md-6">
+                    <div id="map"></div>
+            </div>
+            <div class="col-md-6">
+
+                <div class="wrapper fadeInDown">
+                    <h1>Azista Weather Web Portal</h1><br />
+                    <div id="formContent">
+
+                        <!-- Tabs Titles -->
+                        <!-- Icon -->
+                        <div class="fadeIn first">
+                            <img src="~/Images/azista.png" id="icon" alt="User Icon" />
+                        </div>
+                        <!-- Login Form -->
+                        @using (Html.BeginForm("Index", "Login", FormMethod.Post))
+                        {
+                            @Html.TextBoxFor(m => m.Username, new { @class = "fadeIn second", @id = "login", @placeholder = "Username" })
+                            //<input type="text" id="login" class="fadeIn second" placeholder="login">
+                            @Html.TextBoxFor(m => m.Password, new { @class = "fadeIn third", @id = "password", @style = "-webkit-text-security: circle;", @placeholder = "Password" })
+                            <input type="submit" class="fadeIn fourth" value="Log In">
+                        }
+                        <!-- Remind Passowrd -->
+                        <div id="formFooter">
+                            <a class="underlineHover" href="#">Forgot Password?</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+
+    <!--===============================================================================================-->
+    <script src="~/LoginCSS/vendor/animsition/js/animsition.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="~/LoginCSS/vendor/bootstrap/js/popper.js"></script>
+    <script src="~/LoginCSS/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="~/LoginCSS/vendor/select2/select2.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="~/LoginCSS/vendor/daterangepicker/moment.min.js"></script>
+    <script src="~/LoginCSS/vendor/daterangepicker/daterangepicker.js"></script>
+    <!--===============================================================================================-->
+    <script src="~/LoginCSS/vendor/countdowntime/countdowntime.js"></script>
+    <!--===============================================================================================-->
+    <script src="~/LoginCSS/js/main.js"></script>
+    <script>
+        var mapd = @Html.Raw(Json.Encode(ViewBag.MapData));
+    </script>
+    <script src="~/Scripts/LoginMap.js">
+
+    </script>
+</body>
+</html>

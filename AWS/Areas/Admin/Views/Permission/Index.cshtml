@@ -1,0 +1,289 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.js"></script>
+<script>
+    $(document).ready(function () {
+            ////function for move station for permision
+        $('#btnRight').click(function (e) {
+
+            var selectedOpts = $('#lstBox1 option:selected');
+
+            if (selectedOpts.length == 0) {
+
+                $.alert({
+                    title: 'Alert!',
+                    content: 'Select value For move',
+                });
+
+                e.preventDefault();
+            }
+
+
+            var exists = false;
+
+            debugger;
+            var selected = $("#lstBox2 option");
+
+            $.each(selected, function () {
+
+                for (var cnt = 0; cnt < selected.length; cnt++) {
+
+                    if (selected[cnt].value == selectedOpts.val()) {
+                        exists = true;
+                        return false;
+                    }
+                }
+            });
+
+
+            if (exists == true) {
+
+
+                $.alert({
+                    title: 'Alert!',
+                    content: 'Station Already Permited',
+                });
+            }
+            else {
+                $('#lstBox2').append($(selectedOpts).clone());
+                $(selectedOpts).remove();
+                e.preventDefault();
+            }
+        });
+
+              ////function for move station for update permision
+        $('#btnLeft').click(function (e) {
+            debugger;
+            var selectedOpts = $('#lstBox2 option:selected');
+            if (selectedOpts.length == 0) {
+                $.alert({
+                    title: 'Alert!',
+                    content: 'Select value For move',
+                });
+                e.preventDefault();
+            }
+
+            $('#lstBox1').append($(selectedOpts).clone());
+            $(selectedOpts).remove();
+            e.preventDefault();
+        });
+
+
+  ////function insert  permited data
+
+        $("#btnprsubmit").click(function (e) {
+
+            var valdb = [];
+
+            var userid = $('#ddluser :selected').val();
+            var selected = $("#lstBox2 option");
+            $.each(selected, function () {
+
+                for (var cnt = 0; cnt < selected.length; cnt++) {
+
+                    valdb.push(selected[cnt].value);
+
+                }
+                return false;
+            });
+            debugger;
+            if (valdb.length == 0) {
+                $.alert({
+                    title: 'Alert!',
+                    content: 'Enter Station For Permission',
+                });
+            }
+            else {
+
+                ShowProgress();
+                //alert(valdb);
+                $.ajax({
+                    type: "POST",
+                    url: "/Admin/Permission/insertuserpermission",
+                    data: JSON.stringify({ permissiondata: valdb, id: userid }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (r) {
+                        $(".loading").hide();
+                        $.alert({
+                            title: 'Alert!',
+                            content: r,
+                        });
+                    }
+                });
+
+            }
+
+        });
+
+
+ 
+
+    });
+
+
+    // Function for user wise station
+    function userwisest() {
+
+        var selected_node = $('#ddluser :selected').val();;
+
+        $.ajax({
+            type: "POST",
+            url: "/Admin/Permission/UserwiseStation",
+            data: JSON.stringify({ UId: selected_node }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                console.log(response);
+                debugger;
+                if (response.length == 0) {
+                    $("#lstBox2").empty();
+                }
+                else {
+                    $("#lstBox2").empty();
+                    $.each(response,function (){
+
+                        $("#lstBox2").append($("<option></option>").val(this['Value']).html(this['Text']));
+
+                    });
+                }
+
+            }
+        });
+    }
+
+   // });
+
+
+</script>
+<link href="~/Content/progressbarcss.css" rel="stylesheet" />
+<script type="text/javascript">
+    ///////function for progressbar
+    function ShowProgress() {
+        setTimeout(function () {
+            var modal = $('<div />');
+            modal.addClass("modal");
+            $('.form-body').append(modal);
+            var loading = $(".loading");
+            loading.show();
+            var top = Math.max($(window).height() / 2 - loading[0].offsetHeight / 2, 0);
+            var left = Math.max($(window).width() / 2 - loading[0].offsetWidth / 2, 0);
+            loading.css({ top: top, left: left });
+        }, 200);
+    }
+
+</script>
+<section id="basic-form-layouts">
+    <div class="row match-height">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title" id="basic-layout-tooltip">User Permission</h4>
+                    <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                    <div class="heading-elements">
+
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-block tableblock">
+                        <div class="col-md-3">
+
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="form">
+                                    <div class="form-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="ddluser">Select User</label>
+                                                    @*<select id="ddluser" onclick="userst();"  class="form-control" data-trigger="hover"  >
+                                                            <option value="not started">Not Started</option>
+
+                                                            @{
+
+                                                                foreach (System.Data.DataRow dr in ViewBag.user.Rows)
+                                                                {
+                                                                    <option>
+                                                                        @dr["name"]
+                                                                    </option>
+                                                                }
+                                                            }
+                                                        </select>*@
+                                                    @*@Html.DropDownList("ddluser", new List<SelectListItem>{ViewBag.user}, new { onchange = "this.form.submit();",@class="form-control" })*@
+                                                    @Html.DropDownList("ObjList", (IEnumerable<SelectListItem>)ViewBag.user, new { id = "ddluser", @class = "form-control", onchange = "userwisest();" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+
+
+                                                    <div class="col-xl-5 col-lg-6 col-xs-12">
+                                                        <b>All Station</b><br />
+                                                        @Html.DropDownList("ObjstList", (IEnumerable<SelectListItem>)ViewBag.allst, new { id = "lstBox1", @class = "form-control", multiple = "multiple", @style = "overflow:scroll;height:170px" })
+
+                                                    </div>
+                                                    <div class="col-xl-2" style='width:50px;text-align:center;vertical-align:middle;'>
+                                                        <br />
+                                                        <br />
+
+                                                        <input type='button' id='btnRight' value='  >  ' />
+                                                        <br /><input type='button' id='btnLeft' value='  <  ' />
+
+                                                    </div>
+                                                    <div class="col-xl-5 col-lg-6 col-xs-12">
+                                                        <b>User Station</b><br />
+                                                        <select multiple="multiple" id='lstBox2' name="status" style="overflow:scroll;height:170px" class="form-control" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="User Station"></select>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+
+                                    <div class="form-actions" id="btnevent">
+                                        <br />
+                                        <button type="button" onclick="userwisest()" class="btn btn-warning mr-1">
+                                            <i class="icon-cross2"></i> Cancel
+                                        </button>
+
+
+
+
+                                        @*<input type="button" class="btn btn-success" id="btnAdd" value="Add" />*@
+
+                                        <button type="button" id="btnprsubmit" class="btn btn-primary">
+                                            <i class="icon-check2"></i> Save
+                                        </button>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="loading" align="center">
+                            Loading. Please wait.
+                            <br />
+                            <img src="~/Images/loader.gif" alt="" />
+                        </div>
+                        <div class="col-md-3">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

@@ -1,0 +1,11 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+}
+
+<div id="usermap"></div>
+<script>
+        var usermapd = @Html.Raw(Json.Encode(ViewBag.UserMapData));
+</script>
+<script src="~/Scripts/UserMap.js"></script>

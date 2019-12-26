@@ -1,0 +1,35 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model AWS.Models.ImportExcel
+<style>
+    #viewContent {
+        border-top: solid 2px #CCC;
+    }
+
+        #viewContent > form > span {
+            display: block;
+            color: red;
+        }
+
+        #viewContent h3 {
+            border-bottom: none;
+        }
+</style>
+<div class="card">
+    <div class="card-header">
+        Import Station Through Excel
+    </div>
+    <div class="card-body">
+        <h3>@ViewBag.Result</h3>
+        @using (Html.BeginForm("Index", "ImportStation", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.TextBoxFor(m => m.file, new { type = "file" })
+            <button id="submitButton" type="submit">Submit</button>
+            @Html.ValidationMessageFor(model => model.file)
+        }
+    </div>
+</div>
+
