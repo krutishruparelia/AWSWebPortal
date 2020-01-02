@@ -9,7 +9,9 @@ $(function () {
     $("#grid").dxDataGrid({
         dataSource: JSON.parse(Yesterdaygriddata),
         showBorders: true,
-      
+        allowColumnReordering: true,
+        allowColumnResizing: true,
+        columnAutoWidth: true,
         headerFilter: {
             visible: true,
             allowSearch: true

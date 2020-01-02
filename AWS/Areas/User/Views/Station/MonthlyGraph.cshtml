@@ -2,9 +2,10 @@
     var name1 = ViewBag.MonthlyGraphName;
     var shownamemonth = name1.Replace(" ", "") + "_Month";
     var yedata = Html.Raw(Json.Encode(ViewBag.montlyData));
+    var unit = ViewBag.MonthlygUnit;
     <div class="demo-container">
         <div id="chart-demo">
-            <div id="Month_@shownamemonth" style="width:880px">
+            <div id="Month_@shownamemonth" >
 
             </div>
         </div>
@@ -25,6 +26,9 @@
             bottom: 20
             },
             argumentAxis: {
+                title: {
+                    text: 'Date'
+                },
             valueMarginsEnabled: false,
                 discreteAxisDivisionMode: "crossLabels",
                 grid: {
@@ -35,7 +39,9 @@
                 { valueField: "min", name: "Minimum" },
                 { valueField: "max", name: "Maximum" },
                 { valueField: "avg", name: "Average" },
-            ],
+            ],valueAxis: [{
+                title: "@name1 (@unit)",
+            }],
             scrollBar: {
                 visible: true
             },
@@ -47,9 +53,7 @@
                 horizontalAlignment: "center",
                 itemTextPosition: "bottom"
             },
-            title: {
-            text: "@name1"
-            },
+         
             "export": {
             enabled: true
             },

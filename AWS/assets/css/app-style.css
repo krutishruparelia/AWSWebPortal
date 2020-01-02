@@ -413,11 +413,11 @@ hr {
 }
 
 /* Page Content Wrapper */
-.content-wrapper {
+    .content-wrapper {
     margin-left: 250px;
-	padding-left: 10px;
-    padding-right: 10px;
-    padding-bottom: 70px;
+	padding-left: 0px;
+    padding-right: 0px;
+    padding-bottom: 47px;
     overflow-x: hidden;
 	-webkit-transition: all 0.3s ease;
   -moz-transition: all 0.3s ease;

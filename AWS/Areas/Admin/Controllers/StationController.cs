@@ -240,7 +240,7 @@ namespace AWS.Areas.Admin.Controllers
             stationmaster.SerialNumber = serialNumber;
             stationmaster.ShowInGraph = ShowInGraph;
             stationmaster.ShowInGrid = ShowInGrid;
-            if (Convert.ToString(Session["UpdateID"]) == null)
+            if (Convert.ToString(Session["UpdateID"]) == "")
             {
                 var modelSation = db.tbl_StationMaster;
                 modelSation.Add(stationmaster);
@@ -267,7 +267,7 @@ namespace AWS.Areas.Admin.Controllers
                 }
 
             }
-            if (Convert.ToString(Session["UpdateID"]) == null)
+            if (Convert.ToString(Session["UpdateID"]) == "")
             {
                 var finalParameterquery = createQuery.TrimEnd(',');
                 var querySql = "Create table tbl_StationData_" + stationid + "(ID int not null identity(1,1)," + finalParameterquery + ")";

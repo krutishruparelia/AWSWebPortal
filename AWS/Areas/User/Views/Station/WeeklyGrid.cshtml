@@ -41,23 +41,51 @@
                     </thead>
                 @for (int i = 0; i < dt1.Rows.Count; i++)
                 {
-                    <tr>
-                        <th scope="row">@dt1.Rows[i][0].ToString()</th>
+                <tr>
 
-                        @for (int j = 1; j < dt1.Columns.Count; j++)
-                        {
-                            <td>@dt1.Rows[i][j].ToString()</td>
+                    <th scope="row"><a href="#" id="@i" data-toggle="tab">@dt1.Rows[i][0].ToString()</a></th>
 
-                        }
+                    @for (int j = 1; j < dt1.Columns.Count; j++)
+                    {
+                        <td>@dt1.Rows[i][j].ToString()</td>
+
+                    }
+
+                    <script>
+                        function activaTab(tab) {
+                            $('.nav-tabs a[href="#' + tab + '"]').tab('show');
+                        };
+                        $("#@i").click(function () {
+                            var date = "@dt1.Rows[i][0].ToString()";
+                            var todate = "@dt1.Rows[i][0].ToString()";
+                            activaTab('CustomRange');
+                            $('#frmDate').text(date);
+                            $('#toDate').text(todate);
+                        });
+
+                    </script>
 
 
-
-
-                    </tr>
+                </tr>
                 }
             </table>
+          @*  <div id="details">Click on date to view details</div>*@
         </div>
     </div>
+    <script>
+        $(document).ready(function () {
+            $('#default -datatable').DataTable({
+                scrollY: "300px",
+                scrollX: true,
+                scrollCollapse: true,
+                paging: false,
+                fixedColumns: {
+                    leftColumns: 1,
+                    rightColumns: 1
+                }
+            });
+        });
+    </script>
     <script src="~/assets/plugins/bootstrap-datatable/js/jquery.dataTables.min.js"></script>
     <script src="~/assets/plugins/bootstrap-datatable/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/assets/plugins/bootstrap-datatable/js/dataTables.buttons.min.js"></script>
@@ -68,7 +96,7 @@
     <script src="~/assets/plugins/bootstrap-datatable/js/buttons.html5.min.js"></script>
     <script src="~/assets/plugins/bootstrap-datatable/js/buttons.print.min.js"></script>
     <script src="~/assets/plugins/bootstrap-datatable/js/buttons.colVis.min.js"></script>
-
+   
 }
 
 

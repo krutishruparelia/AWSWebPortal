@@ -11,13 +11,13 @@ namespace AWS.Areas.User.Controllers
     public class StationController : Controller
     {
         private clsDatabase adDB = new clsDatabase();
-        AWSDatabaseContext db = new AWSDatabaseContext();
+        private AWSDatabaseContext db = new AWSDatabaseContext();
         private string json = "";
         private string yesjson = "";
         private string weeklyjson = "";
         private string monthlyjson = "";
-        string colName = "";
-        string AliasColumnName = "";
+        private string colName = "";
+        private string AliasColumnName = "";
         // GET: User/StationView
         public ActionResult Index()
         {
@@ -36,7 +36,7 @@ namespace AWS.Areas.User.Controllers
                         lstusermap.Add(new userMap
                         {
                             location = data.Latitude + "," + data.Longitude,
-                            tooltip = data.Name+"<br />"+"<a href = 'Station/StationView/"+data.StationID+"' >View Details</a >"  
+                            tooltip = data.Name + "<br />" + "<a href = 'Station/StationView/" + data.StationID + "' >View Details</a >"
                         });
                     }
                 }
@@ -46,9 +46,9 @@ namespace AWS.Areas.User.Controllers
             }
             else
             {
-                return RedirectToAction("Index","Login",new { area=""});
+                return RedirectToAction("Index", "Login", new { area = "" });
             }
-            
+
         }
         public ActionResult StationView(string id)
         {
@@ -65,6 +65,7 @@ namespace AWS.Areas.User.Controllers
                 DataSet columnDataset = adDB.FetchData_SP_columnName("getColumnNameForGrid", tableName, "WEB");
                 DataTable columnDataTable = new DataTable();
                 string columnnames = "";
+                string graphcols = "";
                 if (columnDataset.Tables.Count != 0)
                 {
                     columnDataTable = columnDataset.Tables[0];
@@ -72,6 +73,7 @@ namespace AWS.Areas.User.Controllers
                     {
 
                         columnnames += "\"" + columnDataTable.Rows[i][0] + "\"" + ",";
+                        graphcols += columnDataTable.Rows[i][0] + ",";
 
 
                     }
@@ -91,7 +93,7 @@ namespace AWS.Areas.User.Controllers
                     json = JsonConvert.SerializeObject(tdata);
                 }
                 ///Fetching Yesterday's Data to display in grid
-                
+
                 DataSet yesterdayDataset = adDB.SP_ColName(Sp_list.FetchYesterDayData.ToString(), tableName, col, uid, "WEB");
                 DataTable yesdata = new DataTable();
                 if (yesterdayDataset.Tables[0].Rows.Count != 0)
@@ -115,6 +117,9 @@ namespace AWS.Areas.User.Controllers
                 ViewBag.StationGrid = json;
                 ViewBag.YesterdayGrid = yesjson;
                 ViewBag.ColumnNamesGrid = trimEnd;
+                var removebracesstart = trimEnd.TrimStart('[');
+                var removebracesend = removebracesstart.TrimEnd(']');
+                ViewBag.graphColnames = graphcols.TrimEnd(',');
                 return View();
             }
             else
@@ -136,11 +141,12 @@ namespace AWS.Areas.User.Controllers
 
             return View();
         }
-        public ActionResult TodayGraph(string data, string Position)
+        public ActionResult TodayGraph(string data, string Position, string Unit)
         {
             var id = Session["StationID"].ToString();
             int uid = Convert.ToInt32(Session["U_userid"]);
             var tableName = "tbl_StationData_" + id;
+            ViewBag.TodaygUnit = Unit;
             ViewBag.GraphName = data;
             List<graph> lstgraph = new List<graph>();
             ColumnName();
@@ -180,16 +186,17 @@ namespace AWS.Areas.User.Controllers
             }
             return View();
         }
-        public ActionResult YesterdayGraph(string data, string Position)
+        public ActionResult YesterdayGraph(string data, string Position, string Unit)
         {
             var id = Session["StationID"].ToString();
             int uid = Convert.ToInt32(Session["U_userid"]);
             var tableName = "tbl_StationData_" + id;
             ViewBag.YesterdayGraphName = data;
+            ViewBag.YesgUnit = Unit;
             List<yesterdaygraph> lstyesterdaygraph = new List<yesterdaygraph>();
             ColumnName();
             var grpahcolname = "ID,StationID,Date,Time," + colName.TrimEnd(',');
-            DataSet yesterdayData = adDB.SP_ColName(Sp_list.FetchYesterDayData.ToString(), tableName, grpahcolname,uid, "WEB");
+            DataSet yesterdayData = adDB.SP_ColName(Sp_list.FetchYesterDayData.ToString(), tableName, grpahcolname, uid, "WEB");
             DataTable ydata = new DataTable();
             int pos = Convert.ToInt32(Position);
             if (yesterdayData.Tables.Count != 0)
@@ -236,7 +243,7 @@ namespace AWS.Areas.User.Controllers
             }
             var trimDynamicCol = dynamiccol.TrimEnd(',');
             ///Fetching Weekly Data to display in grid
-            DataSet weeklyDataset = adDB.FetchData_SP_MonthlyWeeklyData("getWeeklyMonthlyData", tableName, trimDynamicCol,uid, "WEB");
+            DataSet weeklyDataset = adDB.FetchData_SP_MonthlyWeeklyData("getWeeklyMonthlyData", tableName, trimDynamicCol, uid, "WEB");
             DataTable wdata = new DataTable();
             if (weeklyDataset.Tables[0].Rows.Count != 0)
             {
@@ -250,7 +257,6 @@ namespace AWS.Areas.User.Controllers
         {
             int uid = Convert.ToInt32(Session["U_userid"]);
             var id = Session["StationID"].ToString();
-            string dynamiccol = "";
             var tableName = "tbl_StationData_" + id;
             DataSet columnDataset = adDB.FetchData_SP_columnName(Sp_list.getColumnName.ToString(), tableName, "WEB");
             DataTable columnDataTable = new DataTable();
@@ -258,7 +264,7 @@ namespace AWS.Areas.User.Controllers
             {
                 ColumnName();
                 var trimDynamicCol = colName.TrimEnd(',');
-                DataSet ds2 = adDB.SP_ColName_Alias(Sp_list.getTodayOverview.ToString(), tableName, trimDynamicCol,AliasColumnName.TrimEnd(','),uid, "WEB");
+                DataSet ds2 = adDB.SP_ColName_Alias(Sp_list.getTodayOverview.ToString(), tableName, trimDynamicCol, AliasColumnName.TrimEnd(','), uid, "WEB");
                 DataTable dt1 = new DataTable();
                 if (ds2.Tables[0].Rows.Count != 0)
                 {
@@ -292,7 +298,7 @@ namespace AWS.Areas.User.Controllers
             {
                 ColumnName();
                 var trimDynamicCol = colName.TrimEnd(',');
-                DataSet yesterdaydataset = adDB.SP_ColName_Alias("getYesterdayOverview", tableName, trimDynamicCol,AliasColumnName.TrimEnd(','), uid, "WEB");
+                DataSet yesterdaydataset = adDB.SP_ColName_Alias("getYesterdayOverview", tableName, trimDynamicCol, AliasColumnName.TrimEnd(','), uid, "WEB");
                 DataTable yesterdaydatatable = new DataTable();
                 if (yesterdaydataset.Tables[0].Rows.Count != 0)
                 {
@@ -315,7 +321,7 @@ namespace AWS.Areas.User.Controllers
                 ViewBag.ColumnNames = WeeklycolumnDataTable;
                 ColumnName();
                 var trimDynamicCol = colName.TrimEnd(',');
-                DataSet Weeklydataset = adDB.SP_ColName_Alias("getWeeklyOverview", tableName, trimDynamicCol,AliasColumnName.TrimEnd(','),uid, "WEB");
+                DataSet Weeklydataset = adDB.SP_ColName_Alias("getWeeklyOverview", tableName, trimDynamicCol, AliasColumnName.TrimEnd(','), uid, "WEB");
                 DataTable Weeklydatatable = new DataTable();
                 if (Weeklydataset.Tables.Count != 0)
                 {
@@ -334,16 +340,18 @@ namespace AWS.Areas.User.Controllers
             if (columnDatasetWeekly.Tables.Count != 0)
             {
                 columnDataTableweekly = columnDatasetWeekly.Tables[0];
-                ViewBag.weeklyColumnNames = columnDataTableweekly;
+                ColumnName();
+                ViewBag.weeklyColumnNames = colName.TrimEnd(',');
             }
             return View();
         }
-        public ActionResult WeeklyGraph(string data, string Position)
+        public ActionResult WeeklyGraph(string data, string Position, string Unit)
         {
             var id = Session["StationID"].ToString();
             int uid = Convert.ToInt32(Session["U_userid"]);
             var tableName = "tbl_StationData_" + id;
             ViewBag.WeeklyGraphName = data;
+            ViewBag.gUnit = Unit;
             string dynamiccol = "";
             DataSet ds1 = adDB.FetchData_SP_columnName("getColumnName", tableName, "WEB");
             DataTable dt = new DataTable();
@@ -358,21 +366,21 @@ namespace AWS.Areas.User.Controllers
                 dynamiccol += "min([" + dt.Rows[i][0].ToString() + "]) as [Min " + dt.Rows[i][0].ToString() + "],max([" + dt.Rows[i][0].ToString() + "]) as [Max " + dt.Rows[i][0].ToString() + "],CEILING(avg(Try_convert(float,[" + dt.Rows[i][0].ToString() + "] ))) as [avg " + dt.Rows[i][0].ToString() + "],";
             }
             var trimDynamicCol = dynamiccol.TrimEnd(',');
-            DataSet ds2 = adDB.FetchData_SP_MonthlyWeeklyData("getWeeklyMonthlyData", tableName, trimDynamicCol,uid, "WEB");
+            DataSet ds2 = adDB.FetchData_SP_MonthlyWeeklyData("getWeeklyMonthlyData", tableName, trimDynamicCol, uid, "WEB");
             DataTable dt1 = new DataTable();
             if (ds2.Tables.Count != 0)
             {
                 dt1 = ds2.Tables[0];
                 for (int i = 0; i < dt1.Rows.Count; i++)
                 {
-                    
+
                     lstweklygraph.Add(new Weeklygraph
                     {
                         Time = dt1.Rows[i][0].ToString(),
                         ColumnName = data,
                         min = dt1.Rows[i][pos].ToString(),
-                        max = dt1.Rows[i][pos+1].ToString(),
-                        avg = dt1.Rows[i][pos+2].ToString(),
+                        max = dt1.Rows[i][pos + 1].ToString(),
+                        avg = dt1.Rows[i][pos + 2].ToString(),
 
                     });
                 }
@@ -392,7 +400,7 @@ namespace AWS.Areas.User.Controllers
                 MonthlycolumnDataTable = MonthlycolumnDataset.Tables[0];
                 ColumnName();
                 var trimDynamicCol = colName.TrimEnd(',');
-                DataSet Monthlydataset = adDB.SP_ColName_Alias("getMonthlyOverview", tableName, trimDynamicCol,AliasColumnName.TrimEnd(','),uid, "WEB");
+                DataSet Monthlydataset = adDB.SP_ColName_Alias("getMonthlyOverview", tableName, trimDynamicCol, AliasColumnName.TrimEnd(','), uid, "WEB");
                 DataTable Monthlydatatable = new DataTable();
                 if (Monthlydataset.Tables.Count != 0)
                 {
@@ -415,12 +423,13 @@ namespace AWS.Areas.User.Controllers
             }
             return View();
         }
-        public ActionResult MonthlyGraph(string data, string Position)
+        public ActionResult MonthlyGraph(string data, string Position,string Unit)
         {
             var id = Session["StationID"].ToString();
             int uid = Convert.ToInt32(Session["U_userid"]);
             var tableName = "tbl_StationData_" + id;
             ViewBag.MonthlyGraphName = data;
+            ViewBag.MonthlygUnit = Unit;
             string dynamiccol = "";
             DataSet ds1 = adDB.FetchData_SP_columnName("getColumnName", tableName, "WEB");
             DataTable dt = new DataTable();
@@ -435,7 +444,7 @@ namespace AWS.Areas.User.Controllers
                 dynamiccol += "min([" + dt.Rows[i][0].ToString() + "]) as [Min " + dt.Rows[i][0].ToString() + "],max([" + dt.Rows[i][0].ToString() + "]) as [Max " + dt.Rows[i][0].ToString() + "],CEILING(avg(Try_convert(float,[" + dt.Rows[i][0].ToString() + "]))) as [avg " + dt.Rows[i][0].ToString() + "],";
             }
             var trimDynamicCol = dynamiccol.TrimEnd(',');
-            DataSet ds2 = adDB.FetchData_SP_MonthlyWeeklyData("getMonthlyData", tableName, trimDynamicCol,uid, "WEB");
+            DataSet ds2 = adDB.FetchData_SP_MonthlyWeeklyData("getMonthlyData", tableName, trimDynamicCol, uid, "WEB");
             DataTable dt1 = new DataTable();
             if (ds2.Tables.Count != 0)
             {
@@ -484,7 +493,7 @@ namespace AWS.Areas.User.Controllers
             }
             var trimDynamicCol = dynamiccol.TrimEnd(',');
             ///Fetching Weekly Data to display in grid
-            DataSet MonthlyDataset = adDB.FetchData_SP_MonthlyWeeklyData("getMonthlyData", tableName, trimDynamicCol, uid,"WEB");
+            DataSet MonthlyDataset = adDB.FetchData_SP_MonthlyWeeklyData("getMonthlyData", tableName, trimDynamicCol, uid, "WEB");
             DataTable mdata = new DataTable();
             if (MonthlyDataset.Tables[0].Rows.Count != 0)
             {
@@ -505,6 +514,7 @@ namespace AWS.Areas.User.Controllers
             if (columnDataset.Tables.Count != 0)
             {
                 columnDataTable = columnDataset.Tables[0];
+                ViewBag.gpColname = columnDataset.Tables[0];
                 for (int i = 0; i < columnDataTable.Rows.Count - 1; i++)
                 {
                     var sensorName = columnDataTable.Rows[i][0].ToString();
@@ -519,11 +529,44 @@ namespace AWS.Areas.User.Controllers
                     else
                     {
                         colName += "[" + columnDataTable.Rows[i][0].ToString() + "] as [" + columnDataTable.Rows[i][0].ToString() + "(" + getUnit.Unit + ")]" + ",";
-                        AliasColumnName +="[" + columnDataTable.Rows[i][0].ToString() + "(" + getUnit.Unit + ")],";
+                        AliasColumnName += "[" + columnDataTable.Rows[i][0].ToString() + "(" + getUnit.Unit + ")],";
                     }
                 }
+                ViewBag.gpYesterdayColumnNames = colName.Trim(',');
             }
         }
 
+        public ActionResult CustomRangeOverview()
+        {
+            int uid = Convert.ToInt32(Session["U_userid"]);
+            var id = Session["StationID"].ToString();
+            var tableName = "tbl_StationData_" + id;
+            var fromdate = Convert.ToString(Session["fromDate"]);
+            var todate = Convert.ToString(Session["toDate"]);
+            ColumnName();
+            DataSet customoverviewset = adDB.SP_CustomRange("getCustomDateOverview", tableName, colName.TrimEnd(','), AliasColumnName.TrimEnd(','), uid, fromdate, todate, "WEB");
+            DataTable customoverviewdata = new DataTable();
+            if (customoverviewset.Tables.Count != 0)
+            {
+                customoverviewdata = customoverviewset.Tables[0];
+                ViewBag.customoverviewdata = customoverviewdata;
+            }
+            return View();
+        }
+        public JsonResult CustomRangeOverviewData(string fromdate, string toDate)
+        {
+            var id = Session["StationID"].ToString();
+            var tableName = "tbl_StationData_" + id;
+            DataSet columnDataset = adDB.FetchData_SP_columnName(Sp_list.getColumnName.ToString(), tableName, "WEB");
+            DataTable columnDataTable = new DataTable();
+            if (columnDataset.Tables.Count != 0)
+            {
+                columnDataTable = columnDataset.Tables[0];
+                ViewBag.ColumnNames = columnDataTable;
+            }
+            Session.Add("fromDate", fromdate);
+            Session.Add("toDate", toDate);
+            return Json("", JsonRequestBehavior.AllowGet);
+        }
     }
 }

@@ -2,15 +2,72 @@
 $(function () {
     $("#lookup").dxLookup({
         items: alluser,
-        showPopupTitle: false
+        showPopupTitle: false,
+        onValueChanged: function (e) {
+            var previousValue = e.previousValue;
+            var newValue = e.value;
+            $.ajax({
+                url: "/Admin/PermissionMaster/PermissionMaster",
+                dataType: "json",
+                data: { "value": newValue },
+                success: function (result) {
+                 
+                    showgrid(result);
+                }
+            });
+            
+        }
     });
 
     var dataGrid;
+    
+    var showLoadPanel = function () {
+        loadPanel.show();
+    };
+
+    $(".show-panel").dxButton({
+        stylingMode: "contained",
+        text: "Assign Rights",
+        type: "default",
+        onClick: showLoadPanel
+    });
+
+    var loadPanel = $(".loadpanel").dxLoadPanel({
+        shadingColor: "rgba(0,0,0,0.4)",
+        position: { of: "#form-container" },
+        visible: false,
+        showIndicator: true,
+        showPane: true,
+        shading: true,
+        closeOnOutsideClick: false,
+        onShown: function () {
+            setTimeout(function () {
+                loadPanel.hide();
+            }, 3000);
+        },
+        onHidden: function () {
+            var data = $("#selected-items-container").text();
+            var selectedUser = $("#lookup").dxLookup('option', 'value');
+            $.ajax({
+                url: "/Admin/PermissionMaster/Insert",
+                data: { "ID": data, "user": selectedUser },
+                success: function (result) {
+                    if (DevExpress.ui.dialog.alert("Permission Applied.", "Success")) {
+                        dataGrid.refresh();
+                    }
+                }
+            });
+        }
+    }).dxLoadPanel("instance");
+
+});
+
+function showgrid(parsejson) {
     dataGrid = $("#grid-container").dxDataGrid({
         dataSource: stationalldata,
         allowColumnReordering: true,
- allowColumnResizing: true,
- columnAutoWidth: true,
+        allowColumnResizing: true,
+        columnAutoWidth: true,
         keyExpr: "ID",
         selection: {
             mode: "multiple"
@@ -27,7 +84,7 @@ $(function () {
             visible: true,
             allowSearch: true
         },
-                columnChooser: {
+        columnChooser: {
             enabled: true
         },
         columnFixing: {
@@ -116,8 +173,8 @@ $(function () {
             },
             {
                 dataField: "Profile",
-                caption: "Profile",
-                visible: false
+                caption: "Profile"
+              
             },
             {
                 dataField: "Gain",
@@ -166,48 +223,9 @@ $(function () {
                     }).join(", "));
             else
                 $("#selected-items-container").text("Nobody has been selected");
-        }
+        },
+        selectedRowKeys: JSON.parse("[" + parsejson + "]")
+
     }).dxDataGrid("instance");
 
-
-    var showLoadPanel = function () {
-        loadPanel.show();
-    };
-
-    $(".show-panel").dxButton({
-        stylingMode: "contained",
-        text: "Assign Rights",
-        type: "default",
-        onClick: showLoadPanel
-    });
-
-    var loadPanel = $(".loadpanel").dxLoadPanel({
-        shadingColor: "rgba(0,0,0,0.4)",
-        position: { of: "#form-container" },
-        visible: false,
-        showIndicator: true,
-        showPane: true,
-        shading: true,
-        closeOnOutsideClick: false,
-        onShown: function () {
-            setTimeout(function () {
-                loadPanel.hide();
-            }, 3000);
-        },
-        onHidden: function () {
-            var data = $("#selected-items-container").text();
-            var selectedUser = $("#lookup").dxLookup('option', 'value');
-            $.ajax({
-                url: "/Admin/PermissionMaster/Insert",
-                data: { "ID": data, "user": selectedUser },
-                success: function (result) {
-                    if (DevExpress.ui.dialog.alert("Permission Applied.", "Success")) {
-                        dataGrid.refresh();
-                    }
-                }
-            });
-        }
-    }).dxLoadPanel("instance");
-
-});
-
+}

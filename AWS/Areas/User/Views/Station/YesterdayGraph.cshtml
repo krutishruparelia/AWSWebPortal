@@ -1,10 +1,13 @@
-﻿@{
+﻿<link href="~/Content/ScreenSize.css" rel="stylesheet" />
+@{
     var name1 = ViewBag.YesterdayGraphName;
     var shownameyesterday = name1.Replace(" ", "")+"_Yesterday";
     var yedata = Html.Raw(Json.Encode(ViewBag.yesData));
+    var unit = ViewBag.YesgUnit;
+    
       <div class="demo-container">
         <div id="chart-demo">
-     <div id="Yesterday_@shownameyesterday" style="width:880px">
+     <div id="Yesterday_@shownameyesterday" class="graph">
 
         </div>
             </div>
@@ -23,17 +26,23 @@
             },
             margin: {
             bottom: 20
-            },
+            }, 
+               
             argumentAxis: {
             valueMarginsEnabled: false,
                 discreteAxisDivisionMode: "crossLabels",
                 grid: {
                 visible: true
-                }
+                },
+                title: {
+                    text: 'Time'
+                },
             },
             series: [
                 { valueField: "value", name: "@name1" },
-            ],
+            ],valueAxis: [{
+                title: "@name1 (@unit)",
+            }],
             scrollBar: {
                 visible: true
             },
@@ -45,9 +54,7 @@
                 horizontalAlignment: "center",
                 itemTextPosition: "bottom"
             },
-            title: {
-            text: "@name1"
-            },
+            
             "export": {
             enabled: true
             },
@@ -63,6 +70,8 @@
                 chart.option("commonSeriesSettings.type", e.value);
             }
         });
-    });
+       
+            });
+          
         </script>}
 

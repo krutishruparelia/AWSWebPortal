@@ -4,8 +4,12 @@
     dt = ViewBag.ColumnNames;
     DataTable dt1 = new DataTable();
     dt1 = ViewBag.TodayOverview;
-
-    <div class="card">
+    string trueData = "true";
+    if (dt1.Rows.Count > 3)
+    {
+        trueData = "false";
+    }
+    <div class="card" data-simplebar="init" data-simplebar-auto-hide=@trueData style="height: 214px;">
         <div class="table-responsive">
             <table class="table table-bordered">
                 <col>

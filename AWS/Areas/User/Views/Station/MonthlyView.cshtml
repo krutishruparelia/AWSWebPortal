@@ -1,4 +1,5 @@
 ﻿@using System.Data
+@using AWS.Models
 @{
     DataTable monthlygetCoulmns = new DataTable();
     monthlygetCoulmns = ViewBag.MonthlyColumnNames;
@@ -10,18 +11,41 @@
                     <ul class="nav nav-tabs nav-tabs-primary">
                         @for (int i = 0; i < monthlygetCoulmns.Rows.Count - 1; i++)
                         {
+                            var sname = monthlygetCoulmns.Rows[i][0].ToString();
+                            AWSDatabaseContext db = new AWSDatabaseContext();
+                            var getSensorIDsql = db.tbl_SensorMaster.Where(x => x.Name == sname).FirstOrDefault();
+                            int sensorID = getSensorIDsql.ID;
+                            var getUnitsql = db.tbl_ParameterMaster.Where(j => j.SensorID == sensorID).FirstOrDefault();
                             var name = monthlygetCoulmns.Rows[i][0].ToString().Replace(" ", "");
                             if (i == 0)
                             {
-                                <li class="nav-item">
-                                    <a class="nav-link active" data-toggle="tab" href="#Monthly_@name"><i class="icon-home"></i> <span class="hidden-xs">@monthlygetCoulmns.Rows[i][0].ToString()</span></a>
-                                </li>
+                                if (getUnitsql != null)
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link active" data-toggle="tab" href="#Monthly_@name"><i class="icon-home"></i> <span class="hidden-xs">@monthlygetCoulmns.Rows[i][0].ToString() (@getUnitsql.Unit)</span></a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link active" data-toggle="tab" href="#Monthly_@name"><i class="icon-home"></i> <span class="hidden-xs">@monthlygetCoulmns.Rows[i][0].ToString()</span></a>
+                                    </li>
+                                }
                             }
                             else
                             {
-                                <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#Monthly_@name"><i class="icon-home"></i> <span class="hidden-xs">@monthlygetCoulmns.Rows[i][0].ToString()</span></a>
-                                </li>
+                                if (getUnitsql != null)
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#Monthly_@name"><i class="icon-home"></i> <span class="hidden-xs">@monthlygetCoulmns.Rows[i][0].ToString() (@getUnitsql.Unit)</span></a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#Monthly_@name"><i class="icon-home"></i> <span class="hidden-xs">@monthlygetCoulmns.Rows[i][0].ToString()</span></a>
+                                    </li>
+                                }
                             }
                         }
 
@@ -31,19 +55,43 @@
                     <div class="tab-content">
                         @for (int i = 0; i < monthlygetCoulmns.Rows.Count - 1; i++)
                         {
+                            var sname = monthlygetCoulmns.Rows[i][0].ToString();
+                            AWSDatabaseContext db = new AWSDatabaseContext();
+                            var getSensorIDsql = db.tbl_SensorMaster.Where(x => x.Name == sname).FirstOrDefault();
+                            int sensorID = getSensorIDsql.ID;
+                            var getUnitsql = db.tbl_ParameterMaster.Where(j => j.SensorID == sensorID).FirstOrDefault();
                             var tabname = monthlygetCoulmns.Rows[i][0].ToString().Replace(" ", "");
                             if (i == 0)
                             {
+                                if (getUnitsql != null)
+                                {
 
-                                <div id="Monthly_@tabname" class="container tab-pane active">
-                                    @Html.Action("MonthlyGraph", new { data = monthlygetCoulmns.Rows[i][0].ToString(), Position = position })
-                                </div>
+                                    <div id="Monthly_@tabname" class="container tab-pane active">
+                                        @Html.Action("MonthlyGraph", new { data = monthlygetCoulmns.Rows[i][0].ToString(), Position = position, Unit = getUnitsql.Unit })
+                                    </div>
+                                }
+                                else
+                                {
+
+                                    <div id="Monthly_@tabname" class="container tab-pane active">
+                                        @Html.Action("MonthlyGraph", new { data = monthlygetCoulmns.Rows[i][0].ToString(), Position = position,Unit = "" })
+                                    </div>
+                                }
                             }
                             else
                             {
-                                <div id="Monthly_@tabname" class="container tab-pane">
-                                    @Html.Action("MonthlyGraph", new { data = monthlygetCoulmns.Rows[i][0].ToString(), Position = position })
-                                </div>
+                                if (getUnitsql != null)
+                                {
+                                    <div id="Monthly_@tabname" class="container tab-pane">
+                                        @Html.Action("MonthlyGraph", new { data = monthlygetCoulmns.Rows[i][0].ToString(), Position = position, Unit = getUnitsql.Unit })
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div id="Monthly_@tabname" class="container tab-pane">
+                                        @Html.Action("MonthlyGraph", new { data = monthlygetCoulmns.Rows[i][0].ToString(), Position = position, Unit = "" })
+                                    </div>
+                                }
                             }
                             position++;
                             position++;

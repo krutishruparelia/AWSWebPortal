@@ -1,4 +1,5 @@
 ﻿@using System.Data
+@using AWS.Models
 @{
     DataTable getCoulmns = new DataTable();
     getCoulmns = ViewBag.ColumnNames;
@@ -15,22 +16,45 @@
                 <div class="card-body">
                     <ul class="nav nav-tabs nav-tabs-primary">
                         @*<li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab" href="#CurrentView"><i class="icon-home"></i> <span class="hidden-xs">Current View</span></a>
-                        </li>*@
+            <a class="nav-link active" data-toggle="tab" href="#CurrentView"><i class="icon-home"></i> <span class="hidden-xs">Current View</span></a>
+        </li>*@
                         @for (int i = 0; i < getCoulmns.Rows.Count - 1; i++)
                         {
+                            var sname = getCoulmns.Rows[i][0].ToString();
+                            AWSDatabaseContext db = new AWSDatabaseContext();
+                            var getSensorIDsql = db.tbl_SensorMaster.Where(x => x.Name == sname).FirstOrDefault();
+                            int sensorID = getSensorIDsql.ID;
+                            var getUnitsql = db.tbl_ParameterMaster.Where(j => j.SensorID == sensorID).FirstOrDefault();
                             var name = getCoulmns.Rows[i][0].ToString().Replace(" ", "");
                             if (i == 0)
                             {
-                                <li class="nav-item ">
-                                    <a class="nav-link active" data-toggle="tab" href="#Today_@name"><i class="icon-home"></i> <span class="hidden-xs">@getCoulmns.Rows[i][0].ToString()</span></a>
-                                </li>
+                                if (getUnitsql != null)
+                                {
+                                    <li class="nav-item ">
+                                        <a class="nav-link active" data-toggle="tab" href="#Today_@name"><i class="icon-home"></i> <span class="hidden-xs">@getCoulmns.Rows[i][0].ToString() (@getUnitsql.Unit)</span></a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="nav-item ">
+                                        <a class="nav-link active" data-toggle="tab" href="#Today_@name"><i class="icon-home"></i> <span class="hidden-xs">@getCoulmns.Rows[i][0].ToString()</span></a>
+                                    </li>
+                                }
                             }
                             else
                             {
-                                <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#Today_@name"><i class="icon-home"></i> <span class="hidden-xs">@getCoulmns.Rows[i][0].ToString()</span></a>
-                                </li>
+                                if (getUnitsql != null)
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#Today_@name"><i class="icon-home"></i> <span class="hidden-xs">@getCoulmns.Rows[i][0].ToString() (@getUnitsql.Unit)</span></a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#Today_@name"><i class="icon-home"></i> <span class="hidden-xs">@getCoulmns.Rows[i][0].ToString()</span></a>
+                                    </li>
+                                }
                             }
                         }
 
@@ -39,23 +63,46 @@
                     <!-- Tab panes -->
                     <div class="tab-content">
                         @*<div id="CurrentView" class="container tab-pane active">
-                            @Html.Action("CurrentViewGauge")
-                        </div>*@
+            @Html.Action("CurrentViewGauge")
+        </div>*@
                         @for (int i = 0; i < getCoulmns.Rows.Count - 1; i++)
                         {
+                            var sname = getCoulmns.Rows[i][0].ToString();
+                            AWSDatabaseContext db = new AWSDatabaseContext();
+                            var getSensorIDsql = db.tbl_SensorMaster.Where(x => x.Name == sname).FirstOrDefault();
+                            int sensorID = getSensorIDsql.ID;
+                            var getUnitsql = db.tbl_ParameterMaster.Where(j => j.SensorID == sensorID).FirstOrDefault();
                             var tabname = getCoulmns.Rows[i][0].ToString().Replace(" ", "");
                             if (i == 0)
                             {
+                                if (getUnitsql != null)
+                                {
 
-                                <div id="Today_@tabname" class="container tab-pane active">
-                                    @Html.Action("TodayGraph", new { data = getCoulmns.Rows[i][0].ToString(), Position = position })
-                                </div>
+                                    <div id="Today_@tabname" class="container tab-pane active">
+                                        @Html.Action("TodayGraph", new { data = getCoulmns.Rows[i][0].ToString(), Position = position, Unit = getUnitsql.Unit })
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div id="Today_@tabname" class="container tab-pane active">
+                                        @Html.Action("TodayGraph", new { data = getCoulmns.Rows[i][0].ToString(), Position = position, Unit = "" })
+                                    </div>
+                                }
                             }
                             else
                             {
-                                <div id="Today_@tabname" class="container tab-pane">
-                                    @Html.Action("TodayGraph", new { data = getCoulmns.Rows[i][0].ToString(), Position = position })
-                                </div>
+                                if (getUnitsql != null)
+                                {
+                                    <div id="Today_@tabname" class="container tab-pane">
+                                        @Html.Action("TodayGraph", new { data = getCoulmns.Rows[i][0].ToString(), Position = position, Unit = getUnitsql.Unit })
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div id="Today_@tabname" class="container tab-pane">
+                                        @Html.Action("TodayGraph", new { data = getCoulmns.Rows[i][0].ToString(), Position = position, Unit = "" })
+                                    </div>
+                                }
                             }
                             position++;
                         }

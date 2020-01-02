@@ -2,6 +2,7 @@
     var name = ViewBag.GraphName;
     var showname = name.Replace(" ", "");
     var tdata = Html.Raw(Json.Encode(ViewBag.TodayData));
+    var unit = ViewBag.TodaygUnit;
     <div class="demo-container">
         <div id="chart-demo">
             <div id="Today_@showname">
@@ -29,11 +30,15 @@
                 discreteAxisDivisionMode: "crossLabels",
                 grid: {
                 visible: true
-                }
+                },title: {
+                    text: 'Time'
+                },
             },
             series: [
                 { valueField: "value", name: "@name" },
-            ],
+            ],valueAxis: [{
+                title: "@name (@unit)",
+            }],
             scrollBar: {
                 visible: true
             },
@@ -45,9 +50,7 @@
                 horizontalAlignment: "center",
                 itemTextPosition: "bottom"
             },
-            title: {
-            text: "@name"
-            },
+            
             "export": {
             enabled: true
             },

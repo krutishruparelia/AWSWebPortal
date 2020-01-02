@@ -4,13 +4,18 @@
         markersData = mapJson;
 
     var mapWidget = $("#usermap").dxMap({
-        provider: "bing",
+        provider: "google",
         zoom: 5,
-        height: 940,
+        height: 868,
         width: "100%",
         controls: true,
         markerIconSrc: markerUrl,
-        markers: markersData
+        markers: markersData,
+        key: {
+            // NOTE: Specify your map API keys for every used provider
+            //bing: "YOUR_BING_MAPS_API_KEY",
+            google: "AIzaSyCI1lbHfNJ3XTbX0eWfzE7uqj5o2mATel4"
+        }
     }).dxMap("instance");
 
     $("#use-custom-markers").dxCheckBox({

@@ -1,10 +1,13 @@
-﻿@{
+﻿<link href="~/Content/ScreenSize.css" rel="stylesheet" />
+@{
     var name1 = ViewBag.WeeklyGraphName;
     var shownameweek = name1.Replace(" ", "") + "_Week";
     var yedata = Html.Raw(Json.Encode(ViewBag.weekData));
+    var unit = ViewBag.gUnit;
+
     <div class="demo-container">
         <div id="chart-demo">
-            <div id="Yesterday_@shownameweek" style="width:880px">
+            <div id="Yesterday_@shownameweek" class="graph">
 
             </div>
         </div>
@@ -12,19 +15,32 @@
     <script>
         var @shownameweek = @Html.Raw(Json.Encode(ViewBag.weekData));
 
-    var types = ["line", "stackedline", "fullstackedline"];
-    $(function() {
-        var chart = $("#Yesterday_@shownameweek").dxChart({
+        var types = ["line", "stackedline", "fullstackedline"];
+
+        $(function () {
+           @*$("#Yesterday_@shownameweek").dxChart("render", { force: true });
+        $("#Yesterday_@shownameweek").dxChart("render", { asyncSeriesRendering: false});*@
+
+        //$("#Yesterday_@shownameweek").dxChart("render", { force: true });
+
+
+
+        });
+         var chart = $("#Yesterday_@shownameweek").dxChart({
         palette: "Violet",
             dataSource: @shownameweek,
             commonSeriesSettings: {
                 argumentField: "Time",
                 type: types[0]
             },
+
             margin: {
             bottom: 20
             },
             argumentAxis: {
+                title: {
+                    text: 'Date'
+                },
             valueMarginsEnabled: false,
                 discreteAxisDivisionMode: "crossLabels",
                 grid: {
@@ -35,7 +51,9 @@
                 { valueField: "min", name: "Minimum" },
                 { valueField: "max", name: "Maximum" },
                 { valueField: "avg", name: "Average" },
-            ],
+            ], valueAxis: [{
+                title: "@name1 (@unit)",
+            }],
             scrollBar: {
                 visible: true
             },
@@ -47,24 +65,13 @@
                 horizontalAlignment: "center",
                 itemTextPosition: "bottom"
             },
-            title: {
-            text: "@name1"
-            },
             "export": {
             enabled: true
             },
             tooltip: {
             enabled: true
             }
-        }).dxChart("instance");
-
-        $("#types").dxSelectBox({
-        dataSource: types,
-            value: types[0],
-            onValueChanged: function(e) {
-                chart.option("commonSeriesSettings.type", e.value);
-            }
         });
-    });
+      
     </script>}
 

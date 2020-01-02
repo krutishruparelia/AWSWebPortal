@@ -1137,6 +1137,86 @@ namespace AWS.Models
                 }
             }
         }
+        public DataSet SP_CustomRange(string spname, string tblname, string ColumnName, string AliasColumnName, int uid,string fromdate,string todate, string strConnType)
+        {
+            strFunctionName = "Fetch Data From Database-1";
+
+            lock (this)
+            {
+                SqlDataAdapter da = null;
+                DataSet ds = null;
+
+                SqlCommand SelCmd = new SqlCommand();
+
+                try
+                {
+
+
+                    if (strConnType.Trim().ToUpper() == "LOCAL")
+                    {
+
+                        Connection_Web();
+                        SelCmd.Connection = GlobalConnection;
+                    }
+                    else if (strConnType.Trim().ToUpper() == "WEB")
+                    {
+
+                        Connection_Web();
+                        SelCmd.Connection = GlobalConnection_Web;
+                    }
+
+
+
+                    SelCmd.CommandText = spname;
+                    SelCmd.CommandType = CommandType.StoredProcedure;
+
+                    SelCmd.Parameters.AddWithValue("@TableName", tblname);
+                    SelCmd.Parameters.AddWithValue("@ColumnName", ColumnName);
+                    SelCmd.Parameters.AddWithValue("@AliasColumnName", AliasColumnName);
+                    SelCmd.Parameters.AddWithValue("@UserID", uid);
+                    SelCmd.Parameters.AddWithValue("@fromdate", fromdate);
+                    SelCmd.Parameters.AddWithValue("@todate", todate);
+                    da = new SqlDataAdapter(SelCmd);
+
+                    ds = new DataSet();
+
+                    da.Fill(ds);
+
+                    if (SelCmd != null)
+                    {
+                        SelCmd.Dispose();
+                    }
+
+
+                    return ds;
+
+                }
+                catch (Exception Ex)
+                {
+                    if (SelCmd != null)
+                    {
+                        SelCmd.Dispose();
+                    }
+
+
+
+                    strExceptionMessage = Ex.Message;
+
+
+
+                    return ds;
+                }
+                finally
+                {
+                    if (SelCmd != null)
+                    {
+                        SelCmd.Dispose();
+                    }
+
+
+                }
+            }
+        }
 
     }
 }

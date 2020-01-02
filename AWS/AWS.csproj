@@ -62,6 +62,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\DevExtreme\DevExtreme.AspNet.Mvc.dll</HintPath>
     </Reference>
+    <Reference Include="Elmah, Version=1.2.14706.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -137,6 +140,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Readme\Elmah.txt" />
     <Content Include="assets\css\animate.css" />
     <Content Include="assets\css\app-style.css" />
     <Content Include="assets\css\bootstrap.min.css" />
@@ -909,10 +913,12 @@
     <Content Include="Content\dx.softblue.compact.css" />
     <Content Include="Content\dx.softblue.css" />
     <Content Include="Content\dx.spa.css" />
+    <Content Include="Content\highslide.css" />
     <Content Include="Content\Login.css" />
     <Content Include="Content\navBootStrap.css" />
     <Content Include="Content\navTabs.css" />
     <Content Include="Content\progressbarcss.css" />
+    <Content Include="Content\ScreenSize.css" />
     <Content Include="Content\Site.css" />
     <Content Include="CustomJs\chosen.jquery.js" />
     <Content Include="CustomJs\Dashboard.js" />
@@ -1555,6 +1561,32 @@
     <Content Include="Scripts\globalize\message.min.js" />
     <Content Include="Scripts\globalize\number.js" />
     <Content Include="Scripts\globalize\number.min.js" />
+    <Content Include="Scripts\graphics\close.png" />
+    <Content Include="Scripts\graphics\closeX.png" />
+    <Content Include="Scripts\graphics\controlbar-black-border.gif" />
+    <Content Include="Scripts\graphics\controlbar-text-buttons.png" />
+    <Content Include="Scripts\graphics\controlbar-white-small.gif" />
+    <Content Include="Scripts\graphics\controlbar-white.gif" />
+    <Content Include="Scripts\graphics\controlbar2.gif" />
+    <Content Include="Scripts\graphics\controlbar3.gif" />
+    <Content Include="Scripts\graphics\controlbar4-hover.gif" />
+    <Content Include="Scripts\graphics\controlbar4.gif" />
+    <Content Include="Scripts\graphics\fullexpand.gif" />
+    <Content Include="Scripts\graphics\geckodimmer.png" />
+    <Content Include="Scripts\graphics\icon.gif" />
+    <Content Include="Scripts\graphics\loader.gif" />
+    <Content Include="Scripts\graphics\loader.white.gif" />
+    <Content Include="Scripts\graphics\outlines\beveled.png" />
+    <Content Include="Scripts\graphics\outlines\drop-shadow.png" />
+    <Content Include="Scripts\graphics\outlines\glossy-dark.png" />
+    <Content Include="Scripts\graphics\outlines\outer-glow.png" />
+    <Content Include="Scripts\graphics\outlines\rounded-black.png" />
+    <Content Include="Scripts\graphics\outlines\rounded-white.png" />
+    <Content Include="Scripts\graphics\resize.gif" />
+    <Content Include="Scripts\graphics\scrollarrows.png" />
+    <Content Include="Scripts\graphics\zoomin.cur" />
+    <Content Include="Scripts\graphics\zoomout.cur" />
+    <Content Include="Scripts\highslide-with-gallery.js" />
     <Content Include="Scripts\localization\dx.messages.el.js" />
     <Content Include="Scripts\localization\dx.messages.hu.js" />
     <Content Include="Scripts\localization\dx.messages.sl.js" />
@@ -1713,7 +1745,9 @@
     <Content Include="LoginCSS\vendor\bootstrap\css\bootstrap.css.map" />
     <Content Include="LoginCSS\vendor\bootstrap\css\bootstrap.min.css.map" />
     <Content Include="Areas\Admin\Views\PermissionMaster\Index.cshtml" />
+    <Content Include="Areas\User\Views\Station\CustomRangeOverview.cshtml" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
+    <Content Include="Scripts\graphics\outlines\Outlines.psd" />
     <None Include="Scripts\jquery-3.1.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.1.0.js" />
     <Content Include="Scripts\jquery-3.1.0.min.js" />
@@ -1843,6 +1877,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\DashboardController.cs" />
+    <Compile Include="Areas\Admin\Controllers\DemoController.cs" />
     <Compile Include="Areas\Admin\Controllers\DisplayUsersController.cs" />
     <Compile Include="Areas\Admin\Controllers\ImportStationController.cs" />
     <Compile Include="Areas\Admin\Controllers\MissingDataPermissionController.cs" />
@@ -1900,6 +1935,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="Areas\Admin\Views\Demo\" />
     <Folder Include="Areas\User\Models\" />
     <Folder Include="Areas\User\Views\Shared\" />
     <Folder Include="Areas\User\Views\User\" />

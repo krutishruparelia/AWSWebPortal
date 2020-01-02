@@ -10,7 +10,9 @@ $(function () {
     $("#gridContainer").dxDataGrid({
         dataSource: JSON.parse(griddata),
         showBorders: true,
-        
+        allowColumnReordering: true,
+        allowColumnResizing: true,
+        columnAutoWidth: true,
         headerFilter: {
             visible: true,
             allowSearch: true
@@ -19,8 +21,7 @@ $(function () {
 
         searchPanel: { visible: true },
        
-        
-
+       
         onEditingStart: function (e) {
             logEvent("EditingStart");
         },

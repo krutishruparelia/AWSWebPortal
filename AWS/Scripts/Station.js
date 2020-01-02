@@ -114,7 +114,7 @@ $(function () {
                     data: { "value": e.value },
                     success: function (result) {
                         //$("#partialview").append("@Html.Action('GridViewPartial')");  
-                        $("#partialview").load('Station/GridViewPartial/');
+                        $("#partialview").load('GridViewPartial/');
                     }
                 });
             }
