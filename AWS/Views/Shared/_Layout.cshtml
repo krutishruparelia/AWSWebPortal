@@ -116,11 +116,16 @@
                     </a>
                 </li>
                 <li>
-                    <a href="@Url.Action("Index", "Parameter", new { area = "Admin" })" class="waves-effect">
-                        <i class="zmdi zmdi-calendar-check"></i> <span>Parameters</span>
-                        @*<small class="badge float-right badge-light">20</small>*@
+                    <a href="javaScript:void();" class="waves-effect">
+                        <i class="zmdi zmdi-grid"></i> <span>Parameters</span>
+                        <i class="fa fa-angle-left float-right"></i>
                     </a>
+                    <ul class="sidebar-submenu">
+                        <li><a href="@Url.Action("Index", "Parametertemp", new { area = "Admin" })"><i class="zmdi zmdi-dot-circle-alt"></i>Parameter Master</a></li>
+                        <li><a href="@Url.Action("Index", "ParameterInSensor", new { area = "Admin" })"><i class="zmdi zmdi-dot-circle-alt"></i> Parameter In Sensor</a></li>
+                    </ul>
                 </li>
+              
 
                 <li>
                     <a href="@Url.Action("Index", "Profile", new { area = "Admin" })" class="waves-effect">
@@ -128,6 +133,16 @@
                         <span>Profile</span>
                         @*<small class="badge float-right badge-warning">12</small>*@
                     </a>
+                </li>
+                <li>
+                    <a href="javaScript:void();" class="waves-effect">
+                        <i class="zmdi zmdi-grid"></i> <span>FTP Logs</span>
+                        <i class="fa fa-angle-left float-right"></i>
+                    </a>
+                    <ul class="sidebar-submenu">
+                        <li><a href="@Url.Action("AuditLogs", "FTPLogs", new { area = "Admin" })"><i class="zmdi zmdi-dot-circle-alt"></i>Audit Logs</a></li>
+                        <li><a href="@Url.Action("Index", "FTPLogs", new { area = "Admin" })"><i class="zmdi zmdi-dot-circle-alt"></i>Detailed Logs</a></li>
+                    </ul>
                 </li>
                 <li>
                     <a href="javaScript:void();" class="waves-effect">

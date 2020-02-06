@@ -1,0 +1,24 @@
+﻿
+@{
+    ViewBag.Title = "AuditLogs";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header">
+        Audit Logs
+    </div>
+    <div class="card-body">
+        <div class="demo-container" style="align-self: center;display: flex;justify-content: center;">
+            <div id="data-grid-demo">
+                <div id="gridAuditLogsContainer" style="width:100%"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var auditLogs = @Html.Raw(Json.Encode(ViewBag.AuditLogs));
+    var LastRowFocus = @ViewBag.LastRowID;
+</script>
+<script src="~/Scripts/AuditLogs.js"></script>
+
